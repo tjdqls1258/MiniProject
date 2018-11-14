@@ -1,13 +1,15 @@
 #pragma once
-#include "SDL.h"
-#include <SDL_image.h>
-#include <iostream>
+#include "Player.h"
+#include "Enemy.h"
+#include "Object.h"
+#include <vector>
+#include "LoaderParams.h"
+
 
 class Game
 {
 public:
-	Game() {}
-	~Game() {}
+	
 	bool init(const char* title, int xpos, int ypos,
 		int width, int height, bool fullscreen);
 
@@ -16,20 +18,31 @@ public:
 	void handleEvents();
 	void clean();
 	bool running() { return m_bRunning; }
+	SDL_Renderer* getRenderer() const { return m_pRenderer; }
 
+	static Game* Instance()
+	{
+		if (s_pInstance == 0)
+		{
+			s_pInstance = new Game();
+			return s_pInstance;
+		}
+		return s_pInstance;
+	}
+	void quit();
 private:
-	SDL_Window * m_pWindow = 0;
-	SDL_Renderer* m_pRenderer = 0;
-	SDL_Renderer* b_pRenderer = 0;
+	Game();
+	static Game* s_pInstance;
 
 	bool m_bRunning = true;
 
-	SDL_Texture* m_pTexture;
-	SDL_Texture* b_gTexture;
+	//int m_currentFrame;
 
-	SDL_Rect m_sourceRectangle; //원본 사각형
-	SDL_Rect m_destubationRetangle; //대상 사각형
-
-	SDL_Rect b_sourceRectangle; //원본 사각형
-	SDL_Rect b_destubationRetangle; //대상 사각형
+	SDL_Window * m_pWindow = 0;
+	SDL_Renderer* m_pRenderer = 0;
+	std::vector<GameObject*> m_gameObjects;
 };
+
+
+
+typedef Game TheGame;
