@@ -51,10 +51,6 @@ void TextureManager::drawFrame(std::string id, int x, int y,
 	{
 		srcRect.x = 1 * currentFrame;
 	}
-	if (id == "fire")
-	{
-		srcRect.x = width * int(((SDL_GetTicks() / 4) % 4));
-	}
 	srcRect.y = height * (currentRow - 1);
 	srcRect.w = destRect.w = width;
 	srcRect.h = destRect.h = height;

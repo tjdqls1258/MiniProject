@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Object.h"
+#include "Fire1.h"
 #include <vector>
 #include "LoaderParams.h"
 
@@ -30,6 +31,7 @@ public:
 		return s_pInstance;
 	}
 	void quit();
+	bool Instance_load(std::string FillName, std::string ID, SDL_Renderer* R);
 private:
 	Game();
 	static Game* s_pInstance;

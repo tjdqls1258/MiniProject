@@ -30,14 +30,14 @@ void Player::handleInput()
 			jump = false;
 			hight = 80;
 		}
-		if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_Z))
+		if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_X))
 		{
 			jump = false;
 			hight = 120;
 		}
 		//수정안 z 슬라이딩 x 낮은점프 스페이스바 높은점프
 	}
-	if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_DOWN))
+	if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_Z) && (m_position.getY() == 276))
 	{
 		m_currentRow = 2.5;
 	}
@@ -45,6 +45,7 @@ void Player::handleInput()
 	{
 		m_currentRow = 1;
 	}
+	//좌우 움직임
 	if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT))
 	{
 		m_velocity.setX(2);
