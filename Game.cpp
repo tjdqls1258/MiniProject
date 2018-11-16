@@ -16,21 +16,26 @@ bool Game::init(const char* title, int xpos, int ypos,
 		{
 			m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
 			
+			//ÀÌ¹ÌÁö ·Îµå
 			Instance_load("assets/Player.png", "animate", m_pRenderer);
 			Instance_load("assets/BackGround.png", "back", m_pRenderer);
 			Instance_load("assets/black.png", "wall1", m_pRenderer);
 			Instance_load("assets/fire.png", "fire", m_pRenderer);
 			
-
+			//°´Ã¼ Çª½Ã
 			m_gameObjects.push_back(new Object(new LoaderParams(0, 0, 640, 480, "back")));
 
 			m_gameObjects.push_back(new Enemy(new LoaderParams(5000, 238, 64, 164, "wall1")));
 			m_gameObjects.push_back(new Enemy(new LoaderParams(2000, 320, 64, 164, "wall1")));
 			m_gameObjects.push_back(new Enemy(new LoaderParams(1564, 238, 64, 164, "wall1")));
+			m_gameObjects.push_back(new Enemy(new LoaderParams(7200, 238, 64, 164, "wall1")));
+
 			m_gameObjects.push_back(new Fire(new LoaderParams(1200, 238, 64, 64, "fire")));
+			m_gameObjects.push_back(new Fire(new LoaderParams(3200, 238, 64, 64, "fire")));
+			m_gameObjects.push_back(new Fire(new LoaderParams(6200, 238, 64, 64, "fire")));
 
 			m_gameObjects.push_back(new Player(new LoaderParams(100, 276, 128, 128, "animate")));
-			//SDL_SetRenderDrawColor(m_pRenderer, 255, 0, 0, 255);
+
 		}
 	}
 	else

@@ -8,6 +8,7 @@ private:
 	int hight = 0;
 	void handleInput();
 	void player_jump(int hight);
+	void coll_map();
 public:
 	Player(const LoaderParams* pParams);
 	virtual void draw();
