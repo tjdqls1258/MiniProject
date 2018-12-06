@@ -5,7 +5,7 @@
 #include "Fire1.h"
 #include <vector>
 #include "LoaderParams.h"
-
+#include "GameStateMachine.h"
 
 class Game
 {
@@ -31,7 +31,6 @@ public:
 		return s_pInstance;
 	}
 	void quit();
-	bool Instance_load(std::string FillName, std::string ID, SDL_Renderer* R);
 private:
 	Game();
 	static Game* s_pInstance;
@@ -43,6 +42,7 @@ private:
 	SDL_Window * m_pWindow = 0;
 	SDL_Renderer* m_pRenderer = 0;
 	std::vector<GameObject*> m_gameObjects;
+	GameStateMachine* m_pGameStateMachine;
 };
 
 
