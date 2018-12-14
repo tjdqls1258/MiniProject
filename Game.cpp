@@ -79,16 +79,6 @@ void Game::handleEvents()
 void Game::update()
 {
 	m_pGameStateMachine->update();
-	/*for (std::vector<GameObject*>::size_type i = 0;
-		i != m_gameObjects.size(); i++)
-	{
-		m_gameObjects[i]->update();
-	}*/
-}
-
-Game::Game()
-{
-
 }
 
 // void Game::clean() Ãß°¡ 
