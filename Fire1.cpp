@@ -15,12 +15,10 @@ void Fire::update()
 	m_velocity.setY(0);
 	m_position.setX(m_position.getX() - 5);
 	m_currentFrame = int(((SDL_GetTicks() / 4) % 4));
-	if (m_position.getX() <= -32)
-	{
-		m_velocity.setX(10000);
-	}
+
 	SDLGameObject::update();
 }
 void Fire::clean()
 {
+	m_position.setX(rand() % 500 + 1234);
 }

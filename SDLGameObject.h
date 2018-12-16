@@ -9,6 +9,11 @@ public:
 	virtual void draw();
 	virtual void update();
 	virtual void clean();
+	Vector2D & getPosition() { return m_position; }
+	int getWidth() { return m_width; }
+	int getHeight() { return m_height; }
+	std::string get_textID() { return m_textureID; }
+	bool returncoll() { return coll; }
 protected:
 	Vector2D m_position;
 	Vector2D m_velocity;
@@ -16,8 +21,8 @@ protected:
 
 	int m_width;
 	int m_height;
-	int m_currentRow;
-	int m_currentFrame;
+	double m_currentRow;
+	double m_currentFrame;
 	std::string m_textureID;
-
+	bool coll;
 };

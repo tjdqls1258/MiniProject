@@ -1,4 +1,4 @@
-#include "PlayState.h"
+#include "Infinte.h"
 #include "TextureManger.h"
 #include "Game.h"
 #include "BackGround.h"
@@ -6,18 +6,25 @@
 #include "PauseState.h"
 #include "GameOverState.h"
 #include "Colletent.h"
-#include "Winner.h"
+#include "UITextureManger.h"
+#include "ItemManger.h"
+#include<ctime>
+Infinte* Infinte::s_pInstance = nullptr;
+const std::string Infinte::s_playID = "INFINTE";
 
-PlayState* PlayState::s_pInstance = nullptr;
-const std::string PlayState::s_playID = "PLAY";
-
-void PlayState::update()
+void Infinte::update()
 {
+	srand((unsigned int)time(0));
 	if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_ESCAPE))
 	{
 		TheGame::Instance()->getStateMachine()->pushState(
 			PauseState::Instance());
 	}
+	score += 0.1;
+	std::ostringstream ostr;
+	ostr << "Score : " << score;
+	s = ostr.str();
+	ItemManger::Instance()->update();
 	for (int i = 0; i < m_gameObjects.size(); i++)
 	{
 		m_gameObjects[i]->update();
@@ -26,28 +33,49 @@ void PlayState::update()
 			if (Colletent::Instance()->getColletent(dynamic_cast<SDLGameObject*>(m_gameObjects[0]),
 				dynamic_cast<SDLGameObject*>(m_gameObjects[i])))
 			{
+				if (Game::hi_score < score)
+				{
+					Game::hi_score = score;
+				}
 				GameOverState::Instance()->set_infinte(s_playID);
 				TheGame::Instance()->getStateMachine()->pushState(
 					GameOverState::Instance());
 			}
 			else if (checkOutSide(dynamic_cast<SDLGameObject*>(m_gameObjects[i])))
 			{
-				m_gameObjects.erase(m_gameObjects.begin() + i);
-				i++;
-			}
-			if (m_gameObjects.size() == 1)
-			{
-				TheGame::Instance()->getStateMachine()->pushState(
-					Winner::Instance());
+				m_gameObjects[i]->clean();
 			}
 		}
+	}
+	for (int i = 0; i < ItemManger::Instance()->m_item.size(); i++)
+	{
+
+		if (Colletent::Instance()->getColletent(dynamic_cast<SDLGameObject*>(m_gameObjects[0]),
+			dynamic_cast<SDLGameObject*>(ItemManger::Instance()->m_item[i])))
+		{
+			score += 1.0;
+			ItemManger::Instance()->m_item[i]->clean();
+			Instance_item(1280, rand() % 80 + 294);
+		}
+		else if (checkOutSide(dynamic_cast<SDLGameObject*>(ItemManger::Instance()->m_item[i])))
+		{
+			ItemManger::Instance()->m_item[i]->clean();
+			Instance_item(1380, rand() % 80 + 294);
+		}
+	}
+	if (score == exteurn)
+	{
+		exteurn * 2;
+		Instance_walls(4280, 294, 64, 164, "wall1");
+		Instance_walls(5280, 374, 64, 164, "wall2");
+		Instance_fire(8280, 300);
 	}
 	for (int j = 0; j < m_BackGround.size(); j++) {
 		m_BackGround[j]->update();
 	}
 }
 
-void PlayState::render()
+void Infinte::render()
 {
 	for (int i = 0; i < m_BackGround.size(); i++) {
 		m_BackGround[i]->draw();
@@ -56,10 +84,17 @@ void PlayState::render()
 	{
 		m_gameObjects[i]->draw();
 	}
+	TheUITextureManager::Instance()->draw(540, 500, 200, 100, TheGame::Instance()->getRenderer(), color, s);
+	ItemManger::Instance()->draw();
 }
-bool PlayState::onEnter()
+bool Infinte::onEnter()
 {
-
+	if (!TheTextureManager::Instance()->load(
+		"assets/item.png", "item",
+		TheGame::Instance()->getRenderer()))
+	{
+		return false;
+	}
 	if (!TheTextureManager::Instance()->load(
 		"assets/Player.png", "player",
 		TheGame::Instance()->getRenderer()))
@@ -90,58 +125,61 @@ bool PlayState::onEnter()
 	{
 		return false;
 	}
-	
+	if (!TheUITextureManager::Instance()->load(24, TheGame::Instance()->getRenderer()))
+	{
+		return false;
+	}
+	score = 0.0;
 	GameObject* player = new Player(new LoaderParams(100, 100, 128, 128, "player"));
 	m_gameObjects.push_back(player);
-	Instance_walls(1000, 294, 64, 164, "wall1");
-	Instance_walls(2000, 294, 64, 164, "wall1");
-	Instance_walls(3000, 294, 64, 164, "wall1");
-	Instance_walls(4000, 294, 64, 164, "wall1");
+	Instance_walls(1280, 294, 64, 164, "wall1");
 	
-	Instance_walls(1650, 374, 64, 86, "wall2");
-	Instance_walls(2650, 374, 64, 86, "wall2");
-	Instance_walls(3650, 374, 64, 86, "wall2");
+	Instance_walls(2280, 374, 64, 86, "wall2");
 
-	Instance_fire(1350, 300);
-	Instance_fire(2350, 300);
-	Instance_fire(3350, 300);
+	Instance_fire(5000, 300);
 
 	instance_BackGround(0, 0, 1280, 640);
 	instance_BackGround(1280, 0, 1280, 640);
 
-	std::cout << "entering PlayState\n";
+	Instance_item(1400, 374);
+	std::cout << "entering Infinte\n";
 	return true;
 }
-void PlayState::Instance_walls(int x, int y, int w, int h, std::string EnemyName)
+void Infinte::Instance_item(int x, int y)
+{
+	ItemManger::Instance()->instance_bullte(x, y);
+}
+void Infinte::Instance_walls(int x, int y, int w, int h, std::string EnemyName)
 {
 	GameObject* walls = new Enemy(new LoaderParams(x, y, w, h, EnemyName));
 	m_gameObjects.push_back(walls);
 }
-void PlayState::instance_BackGround(int x, int y, int w, int h)
+void Infinte::instance_BackGround(int x, int y, int w, int h)
 {
 	GameObject* background = new BackGround(
 		new LoaderParams(x, y, w, h, "back"));
 
 	m_BackGround.push_back(background);
 }
-void PlayState::Instance_fire(int x, int y)
+void Infinte::Instance_fire(int x, int y)
 {
 	GameObject* fire = new Fire(new LoaderParams(x, y, 64, 64, "fire"));
 	m_gameObjects.push_back(fire);
 }
-bool PlayState::onExit()
+
+bool Infinte::onExit()
 {
 	for (int i = 0; i < m_gameObjects.size(); i++)
 	{
 		m_gameObjects[i]->clean();
 	}
 	m_gameObjects.clear();
-
+	ItemManger::Instance()->clean();
 	TheTextureManager::Instance()->clearFromTextureMap("helicopter");
-	std::cout << "exiting PlayState\n";
+	std::cout << "exiting Infinte\n";
 	return true;
 }
-bool PlayState::checkOutSide(SDLGameObject* p1)
+bool Infinte::checkOutSide(SDLGameObject* p1)
 {
 	int x = p1->getPosition().getX();
 	int y = p1->getPosition().getY();
@@ -151,4 +189,8 @@ bool PlayState::checkOutSide(SDLGameObject* p1)
 		return true;
 	}
 	return false;
+}
+float Infinte::retrunscore()
+{
+	return score;
 }

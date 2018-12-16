@@ -26,14 +26,14 @@ void Player::coll_map()
 	{
 		m_position.setX(16.0f);
 	}
-	else if (m_position.getX() >= 560)
+	else if (m_position.getX() >= 1124)
 	{
-		m_position.setX(560.0f);
+		m_position.setX(1124.0f);
 	}
 }
 void Player::handleInput()
 {
-	if (m_position.getY() >= 276 && jump)
+	if (m_position.getY() >= 320 && jump&& (m_position.getY() <= 384))
 	{
 		if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_SPACE))
 		{
@@ -46,13 +46,20 @@ void Player::handleInput()
 			hight = 120;
 		}
 	}
-	if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_Z) && (m_position.getY() >= 276))
+	if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_Z) && (m_position.getY() >= 320))
 	{
 		m_currentRow = 2.5;
+		m_position.setY(384);
+		if (!jump)
+		{
+			m_currentRow = 1;
+			m_position.setY(320);
+		}
 	}
-	else
+	else if(jump && (m_position.getY() >= 320))
 	{
 		m_currentRow = 1;
+		m_position.setY(320);
 	}
 	//ÁÂ¿ì ¿òÁ÷ÀÓ
 	if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RIGHT))
@@ -78,7 +85,7 @@ void Player::player_jump(int hight)
 			jump = true;
 		}
 	}
-	else if (jump && !(m_position.getY() >= 276))
+	else if (jump && !(m_position.getY() >= 320))
 	{
 		m_velocity.setY(5);
 	}

@@ -14,13 +14,11 @@ void Enemy::update()
 	m_velocity.setX(0);
 	m_velocity.setY(0);
 	m_position.setX(m_position.getX() - 5);
-	m_currentFrame = int(((SDL_GetTicks() / 4) % 1));
-	if (m_position.getX() <= -32)
-	{
-		m_velocity.setX(10000);
-	}
+	m_currentFrame = 0;
 	SDLGameObject::update();
 }
 void Enemy::clean()
 {
+	//move side
+	m_position.setX(rand() % 500 + 1283);
 }

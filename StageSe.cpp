@@ -1,15 +1,15 @@
-#include "StageSe.h"
+#include "PlayState.h"
 #include "GameStateMachine.h"
-#include "MenuState .h"
+#include "StageSe.h"
 #include "MenuButton.h"
 #include "Game.h"
 #include <iostream>
 #include"TextureManger.h"
+#include "Infinte.h"
+StageSe* StageSe::s_pInstance = nullptr;
+const std::string StageSe::s_menuID = "STAGE";
 
-MenuState* MenuState::s_pInstance = nullptr;
-const std::string MenuState::s_menuID = "MENU";
-
-void MenuState::update()
+void StageSe::update()
 {
 	for (int i = 0; i < m_gameObjects.size(); i++)
 	{
@@ -17,7 +17,7 @@ void MenuState::update()
 	}
 }
 
-void MenuState::render()
+void StageSe::render()
 {
 	for (int i = 0; i < m_gameObjects.size(); i++)
 	{
@@ -25,40 +25,42 @@ void MenuState::render()
 	}
 }
 
-bool MenuState::onEnter()
+bool StageSe::onEnter()
 {
-	if (!TheTextureManager::Instance()->load("assets/button.png",
-		"playbutton", TheGame::Instance()->getRenderer()))
+	if (!TheTextureManager::Instance()->load("assets/Stage1.png",
+		"Stage1", TheGame::Instance()->getRenderer()))
 	{
 		return false;
 	}
-	if (!TheTextureManager::Instance()->load("assets/exit.png",
-		"exitbutton", TheGame::Instance()->getRenderer()))
+	if (!TheTextureManager::Instance()->load("assets/Stage2.png",
+		"Stage2", TheGame::Instance()->getRenderer()))
 	{
 		return false;
 	}
-	if (!TheTextureManager::Instance()->load("assets/Start.png",
+	if (!TheTextureManager::Instance()->load("assets/StageSen.png",
 		"backGround", TheGame::Instance()->getRenderer()))
 	{
 		return false;
 	}
 	GameObject* button1 = new MenuButton(
-		new LoaderParams(400, 300, 400, 100, "playbutton"),
-		s_menuToPlay);
+		new LoaderParams(400, 300, 400, 100, "Stage1"),
+		s_gostage1);
+
 	GameObject* Back = new SDLGameObject(new LoaderParams(0, 0, 1280, 640, "backGround"));
+	
 	GameObject* button2 = new MenuButton(
-		new LoaderParams(400, 500, 400, 100, "exitbutton"),
-		s_exitFromMenu);
+		new LoaderParams(400, 500, 400, 100, "Stage2"),
+		s_gostage2);
 	m_gameObjects.push_back(Back);
 	m_gameObjects.push_back(button1);
 	m_gameObjects.push_back(button2);
 
-	std::cout << "entering MenuState\n";
+	std::cout << "entering StageSe\n";
 
 	return true;
 }
 
-bool MenuState::onExit()
+bool StageSe::onExit()
 {
 	for (int i = 0; i < m_gameObjects.size(); i++)
 	{
@@ -69,16 +71,16 @@ bool MenuState::onExit()
 		->clearFromTextureMap("playbutton");
 	TheTextureManager::Instance()
 		->clearFromTextureMap("exitbutton");
-	std::cout << "exiting MenuState\n";
+	std::cout << "exiting StageSe\n";
 	return true;
 }
 
-void MenuState::s_exitFromMenu()
+void StageSe::s_gostage2()
 {
-	TheGame::Instance()->quit();
+	TheGame::Instance()->getStateMachine()->changeState(Infinte::Instance());
 }
 
-void MenuState::s_menuToPlay()
+void StageSe::s_gostage1()
 {
-	TheGame::Instance()->getStateMachine()->changeState(StageSe::Instance());
+	TheGame::Instance()->getStateMachine()->changeState(PlayState::Instance());
 }

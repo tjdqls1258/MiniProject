@@ -32,6 +32,7 @@ public:
 
 	void quit();
 	GameStateMachine* getStateMachine() { return m_pGameStateMachine; }
+	static double hi_score;
 private:
 	Game() {}
 	static Game* s_pInstance;

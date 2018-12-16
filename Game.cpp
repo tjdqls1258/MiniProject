@@ -5,7 +5,7 @@
 #include "PlayState.h"
 Game* Game::s_pInstance = 0;
 PlayState* m_pPlayState;
-
+double Game::hi_score = 0.0f;
 bool Game::init(const char* title, int xpos, int ypos,
 	int width, int height, bool fullscreen)
 {
